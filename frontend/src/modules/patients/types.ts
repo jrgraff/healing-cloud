@@ -1,3 +1,6 @@
 export interface IPatient {
-  id?: string;
+  id: string;
+  name: string;
+  email: string;
+  birth_date: string;
 }

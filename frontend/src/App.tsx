@@ -11,7 +11,11 @@ function App() {
   return (
     <>
       <Header />
-      <Container fixed sx={{ marginTop: '4rem' }}>
+      <Container
+        maxWidth={false}
+        disableGutters
+        sx={{ marginTop: '2rem', padding: '0 2.5rem' }}
+      >
         {allowedRoutes}
       </Container>
     </>
