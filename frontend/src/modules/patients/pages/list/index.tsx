@@ -44,7 +44,7 @@ export function ListPatients() {
     handleFetchPatients();
   };
 
-  return patientsData ? (
+  return (
     <>
       <ConfirmDialog
         visible={confirmDelete}
@@ -71,8 +71,8 @@ export function ListPatients() {
       <CustomPaginationTable
         page={page}
         setPage={setPage}
-        values={patientsData.patients}
-        valuesCount={patientsData.count}
+        values={patientsData?.patients || []}
+        valuesCount={patientsData?.count || 0}
         handleEditRow={id => navigate(`${id}/edit`)}
         handleDeleteRow={id => {
           setConfirmDelete(true);
@@ -80,7 +80,5 @@ export function ListPatients() {
         }}
       />
     </>
-  ) : (
-    <Error error={204} />
   );
 }
