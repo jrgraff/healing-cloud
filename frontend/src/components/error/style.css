@@ -1,0 +1,47 @@
+* {
+  font-family: 'Inter';
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  gap: 2rem;
+  background-color: white;
+  height: 100vh;
+}
+
+.errorCode {
+  font-weight: 900;
+  font-size: 82px;
+}
+
+.errorSeparator {
+  width: 100px;
+  height: 15px;
+  background-color: cyan;
+}
+
+.errorMessage {
+  font-weight: 600;
+  font-size: 24px;
+  width: 25%;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+@media (max-width: 767px) {
+  .logoLoading {
+    width: 80%;
+  }
+
+  .errorCode {
+    font-size: 64px;
+  }
+
+  .errorMessage {
+    width: 75%;
+  }
+}
