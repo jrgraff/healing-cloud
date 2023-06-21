@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import { IRouteType } from '../../types/IRouteType';
 import { ListPatients } from './pages/list';
-// import { RegisterPatients } from './pages/Register';
-// import { DetailPatients } from './pages/Detail';
+import { RegisterPatient } from './pages/register';
 
 export const PatientsRoutes: IRouteType = {
   path: '',
@@ -12,17 +11,13 @@ export const PatientsRoutes: IRouteType = {
       path: '', // List all patients
       element: <ListPatients />,
     },
-    // {
-    //   path: ':id/create', // Update patients
-    //   element: renderElement(RegisterPatients),
-    // },
-    // {
-    //   path: 'create', // Create patients
-    //   element: renderElement(RegisterPatients),
-    // },
-    // {
-    //   path: ':id', // Detail patients
-    //   element: renderElement(DetailPatients),
-    // },
+    {
+      path: ':id/edit', // Update patients
+      element: <RegisterPatient />,
+    },
+    {
+      path: 'create', // Create patients
+      element: <RegisterPatient />,
+    },
   ],
 };
