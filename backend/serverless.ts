@@ -1,4 +1,5 @@
 import type { AWS } from '@serverless/typescript';
+import { createPatient } from './src/modules/patients';
 
 const PATIENTS_TABLE_NAME = 'hc-patients';
 const REGION = 'sa-east-1';
@@ -40,18 +41,7 @@ const serverlessConfiguration: AWS = {
     ],
   },
   functions: {
-    createPatient: {
-      handler: 'src/modules/patients/functions/createPatient.handler',
-      events: [
-        {
-          http: {
-            path: 'patients',
-            method: 'post',
-            cors: true,
-          },
-        },
-      ],
-    },
+    createPatient,
   },
   package: { individually: true },
   custom: {

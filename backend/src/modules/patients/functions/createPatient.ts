@@ -1,15 +1,18 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import CreatePatientService from '../services/createPatientService';
 
-export const handler: APIGatewayProxyHandler = async (event) => {
-  const data = JSON.parse(event.body);
+import CreatePatientService from '../services/createPatientService';
+import { middyfy } from '../../../lib/lambda';
+import { formatJSONResponse } from '../../../lib/api-gateway';
+import { IPatient } from '../dtos/patientDTO';
+
+const createPatient: APIGatewayProxyHandler = async (event) => {
+  const data = event.body as unknown as IPatient;
 
   const createPatientService = new CreatePatientService();
 
-  const patient = await createPatientService.execute(data);
+  const response = await createPatientService.execute(data);
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(patient),
-  };
+  return formatJSONResponse(response, 201);
 };
+
+export const handler = middyfy(createPatient);

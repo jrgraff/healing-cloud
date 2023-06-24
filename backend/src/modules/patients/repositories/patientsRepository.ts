@@ -18,7 +18,7 @@ export class PatientsRepository implements IPatientsRepository {
         Item: {
           ...data,
           id: randomUUID(),
-          created_at: new Date(),
+          created_at: new Date().toUTCString(),
         },
       })
       .promise();
@@ -43,7 +43,7 @@ export class PatientsRepository implements IPatientsRepository {
   async findByEmail(email: string): Promise<IPatient | undefined> {
     const params = {
       TableName: 'hc-patients',
-      FilterExpression: 'contains(email, :email)',
+      FilterExpression: 'email = :email',
       ExpressionAttributeValues: { ':email': email },
     };
 

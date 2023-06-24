@@ -9,12 +9,6 @@
     "target": "ES2020",
     "outDir": "lib"
   },
-  "baseUrl": "./src",
-  "rootDir": "./src",
-  "paths": {
-    "@modules/*": ["modules/*"],
-    "@lib/*": ["lib/*"]
-  },
   "include": ["src/**/*.ts", "serverless.ts"],
   "exclude": [
     "node_modules/**/*",
