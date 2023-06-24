@@ -10,9 +10,9 @@ const createPatient: APIGatewayProxyHandler = async (event) => {
 
   const createPatientService = new CreatePatientService();
 
-  const response = await createPatientService.execute(data);
+  const patient = await createPatientService.execute(data);
 
-  return formatJSONResponse(response, 201);
+  return formatJSONResponse(patient, 201);
 };
 
 export const handler = middyfy(createPatient);

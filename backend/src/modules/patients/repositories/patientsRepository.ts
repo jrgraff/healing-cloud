@@ -4,7 +4,7 @@ import { IPatient } from '../dtos/patientDTO';
 
 interface IPatientsRepository {
   create(data: IPatient): Promise<IPatient>;
-  update(data: IPatient): Promise<IPatient>;
+  update(id: string, data: IPatient): Promise<IPatient>;
   findById(id: string): Promise<IPatient | undefined>;
   findByEmail(email: string): Promise<IPatient | undefined>;
   findAll(page: number, search: string): Promise<[IPatient[], number]>;
@@ -27,8 +27,38 @@ export class PatientsRepository implements IPatientsRepository {
 
     return item;
   }
-  async update(data: IPatient): Promise<IPatient> {
-    throw new Error('Method not implemented.');
+  async update(id: string, data: IPatient): Promise<IPatient> {
+    const items = { ...data, updated_at: new Date().toUTCString() };
+    const itemKeys = Object.keys(items);
+
+    let updateExpression = `SET ${itemKeys
+      .map((k, index) => `#field${index} = :value${index}`)
+      .join(', ')}`;
+    let dataNames = itemKeys.reduce(
+      (accumulator, k, index) => ({ ...accumulator, [`#field${index}`]: k }),
+      {},
+    );
+    let dataValues = itemKeys.reduce(
+      (accumulator, k, index) => ({
+        ...accumulator,
+        [`:value${index}`]: items[k],
+      }),
+      {},
+    );
+
+    const params = {
+      TableName: 'hc-patients',
+      Key: { id },
+      UpdateExpression: updateExpression,
+      ExpressionAttributeNames: dataNames,
+      ExpressionAttributeValues: dataValues,
+    };
+
+    await document.update(params).promise();
+
+    const response = await this.findById(id);
+
+    return response;
   }
   async findById(id: string): Promise<IPatient> {
     const params = {
@@ -51,10 +81,11 @@ export class PatientsRepository implements IPatientsRepository {
 
     return response?.Items?.length > 0 ? response.Items[0] : undefined;
   }
-  async findAll(page: number, search: string): Promise<IPatient[]> {
+  async findAll(page: number, search: string): Promise<any> {
     const params = {
       TableName: 'hc-patients',
-      FilterExpression: 'contains(name, :search)',
+      FilterExpression:
+        'contains(full_name, :search) or contains(email, :search)',
       ExpressionAttributeValues: { ':search': search },
     };
 
