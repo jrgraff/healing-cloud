@@ -22,7 +22,7 @@ export function ListPatients() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [patientId, setPatientId] = useState<string>();
 
-  const { data } = getAllPatients(startKeys[page], search);
+  const { data, refetch } = getAllPatients(startKeys[page], search);
 
   useEffect(() => {
     const keys = [...startKeys];
@@ -32,11 +32,8 @@ export function ListPatients() {
   }, [data]);
 
   const handleDeletePatient = async () => {
-    if (!patientId) return;
-
     await api.delete(`/patients/${patientId}`);
-    setPage(0);
-    setStartKeys([]);
+    refetch();
   };
 
   return (
@@ -63,6 +60,7 @@ export function ListPatients() {
           </Stack>
         </Stack>
       </Box>
+
       <CustomPaginationTable
         page={page}
         setPage={setPage}

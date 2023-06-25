@@ -76,6 +76,16 @@ export class PatientsRepository implements IPatientsRepository {
 
     return response.Item as IPatient;
   }
+
+  async delete(id: string) {
+    const params = {
+      TableName: this.tableName,
+      Key: { id },
+    };
+
+    await document.delete(params).promise();
+  }
+
   async findByEmail(email: string): Promise<IPatient | undefined> {
     const params = {
       TableName: this.tableName,

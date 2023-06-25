@@ -115,7 +115,7 @@ export function CustomPaginationTable({
           {values.map(row => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.full_name}
               </TableCell>
               <TableCell align="right">{row.email}</TableCell>
               <TableCell align="right">{row.birth_date}</TableCell>

@@ -49,6 +49,18 @@ const getPatientById = {
   ],
 };
 
+const deletePatient = {
+  handler: `${dir}/functions/deletePatient.handler`,
+  events: [
+    {
+      http: {
+        method: 'delete',
+        path: 'patients/{id}',
+      },
+    },
+  ],
+};
+
 const getPatients = {
   handler: `${dir}/functions/getPatients.handler`,
   events: [
@@ -66,4 +78,5 @@ export const patients = {
   updatePatient,
   getPatientById,
   getPatients,
+  deletePatient,
 };
