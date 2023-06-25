@@ -1,14 +1,25 @@
 import * as yup from 'yup';
 
 export const registerPatientInitialValues = {
-  name: '',
+  full_name: '',
   email: '',
   birth_date: new Date(),
   cpf: '',
+  address: {
+    number: null,
+    country: '',
+    uf: '',
+    city: '',
+    street: '',
+    district: '',
+    neighborhood: '',
+    complement: '',
+    cep: null,
+  },
 };
 
 export const registerPatientValidation = yup.object({
-  name: yup.string().required('Campo obrigatório'),
+  full_name: yup.string().required('Campo obrigatório'),
   email: yup.string().required('Campo obrigatório'),
   birth_date: yup.date().required('Campo obrigatório'),
   cpf: yup

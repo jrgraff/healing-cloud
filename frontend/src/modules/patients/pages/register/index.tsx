@@ -1,40 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { DatePicker } from 'formik-mui-lab';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
-import api from '../../../../services/api';
-import { IPatient } from '../../types';
 import { Error } from '../../../../components/error';
 import {
   registerPatientInitialValues,
   registerPatientValidation,
 } from './index.formik';
+import { getPatientById, savePatient } from '../../hooks';
 
 export function RegisterPatient() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [patient, setPatient] = useState<IPatient>();
+  const { data, isLoading } = getPatientById(id);
+  const { mutate } = savePatient(() => navigate('/'));
 
-  useEffect(() => {
-    if (id) {
-      (async () => {
-        const response = await api.get(`/patients/${id}`);
-
-        setPatient(response.data);
-      })();
-    }
-  }, [id]);
-
-  if (id && !patient) return <Error error={204} />;
+  if (isLoading) return <CircularProgress />;
+  if (id && !data) return <Error error={204} />;
 
   return (
     <>
@@ -45,20 +40,21 @@ export function RegisterPatient() {
           </Typography>
         </Stack>
         <Formik
-          initialValues={registerPatientInitialValues}
+          initialValues={id ? data : registerPatientInitialValues}
           validationSchema={registerPatientValidation}
-          onSubmit={async values => {
-            console.log('my values: ', values);
-            return new Promise(res => setTimeout(res, 2500));
+          enableReinitialize={true}
+          onSubmit={(data, helper) => {
+            mutate(data);
+            helper.setSubmitting(false);
           }}
         >
-          {({ values, errors, isSubmitting }) => (
+          {({ values, setFieldValue, isSubmitting }) => (
             <Form autoComplete="off">
               <Grid spacing={2} container boxShadow={1} paddingY={2}>
                 <Grid item xs={3}>
                   <Field
                     fullWidth
-                    name="name"
+                    name="full_name"
                     component={TextField}
                     label="Nome completo"
                   />
@@ -72,12 +68,16 @@ export function RegisterPatient() {
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <Field
-                    fullWidth
-                    name="birth_date"
-                    component={TextField}
-                    label="Data de nascimento"
-                  />
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      id="date-picker-dialog"
+                      label="Data de nascimento"
+                      inputVariant="outlined"
+                      format="dd/MM/yyyy"
+                      value={values?.birth_date || ''}
+                      onChange={value => setFieldValue('birth_date', value)}
+                    />
+                  </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item xs={3}>
                   <Field
@@ -167,7 +167,6 @@ export function RegisterPatient() {
                   type="button"
                   variant="contained"
                   color="inherit"
-                  disabled={isSubmitting}
                   onClick={() => navigate('/')}
                 >
                   Voltar
@@ -176,7 +175,6 @@ export function RegisterPatient() {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={isSubmitting}
                   startIcon={
                     isSubmitting ? (
                       <CircularProgress size="0.8rem" />

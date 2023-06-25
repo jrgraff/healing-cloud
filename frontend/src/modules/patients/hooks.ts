@@ -1,7 +1,8 @@
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import api from '../../services/api';
 import { useErrorHandler } from '../../context/errorHandler';
+import { IPatient } from './types';
 
 export const getAllPatients = (
   startKey: string | undefined,
@@ -24,7 +25,9 @@ export const getAllPatients = (
   );
 };
 
-export const getPatientById = (id: string) => {
+export const getPatientById = (id: string | undefined) => {
+  if (!id) return { data: undefined, isLoading: false };
+
   const { handleError } = useErrorHandler();
 
   return useQuery(
@@ -36,4 +39,23 @@ export const getPatientById = (id: string) => {
     },
     { onError: handleError }
   );
+};
+
+export const savePatient = (onSuccess: () => void) => {
+  const registerPatient = async ({
+    id,
+    ...data
+  }: {
+    id: string;
+    data: IPatient;
+  }) => {
+    if (id) {
+      await api.put(`/patients/${id}`, data);
+    } else {
+      await api.post(`/patients/`, data);
+    }
+  };
+  const { handleError } = useErrorHandler();
+
+  return useMutation(registerPatient, { onSuccess, onError: handleError });
 };

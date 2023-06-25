@@ -12,8 +12,8 @@ const ErrorHandlerContext = createContext<ErrorHandlerType | undefined>(
 
 export const ErrorHandlerProvider = ({ children }: IChildrenType) => {
   const handleError = (error: AxiosError<any>) => {
-    if (error.response?.data?.message) {
-      alert(error.response.data.message);
+    if (error.response?.data?.errorMessage) {
+      alert(error.response.data.errorMessage);
     } else {
       alert('Caso o erro persista entre em contato com um administrador');
     }
