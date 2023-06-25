@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -70,6 +70,7 @@ export function RegisterPatient() {
                 <Grid item xs={3}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
+                      fullWidth
                       id="date-picker-dialog"
                       label="Data de nascimento"
                       inputVariant="outlined"
