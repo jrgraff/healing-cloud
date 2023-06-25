@@ -9,39 +9,34 @@ import Stack from '@mui/material/Stack';
 import api from '../../../../services/api';
 import { Search } from '../../../../components/search';
 import { CustomPaginationTable } from '../../components/customTable';
-import { IPatient } from '../../types';
-import { Error } from '../../../../components/error';
 import { ConfirmDialog } from '../../../../components/dialog/confirmDialog';
-
-interface IPatientsList {
-  count: number;
-  patients: IPatient[];
-}
+import { getAllPatients } from '../../hooks';
 
 export function ListPatients() {
   const navigate = useNavigate();
 
   const [page, setPage] = useState(0);
-  const [patientsData, setPatientsData] = useState<IPatientsList>();
+  const [search, setSearch] = useState('');
+  const [startKeys, setStartKeys] = useState<string[]>([]);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [patientId, setPatientId] = useState<string>();
 
+  const { data } = getAllPatients(startKeys[page], search);
+
   useEffect(() => {
-    handleFetchPatients();
-  }, [page]);
+    const keys = [...startKeys];
+    keys[page + 1] = data?.patients[data?.patients.length - 1]?.id;
 
-  const handleFetchPatients = async () => {
-    const response = await api.get(`/patients?_page=${page + 1}`);
-
-    setPatientsData({ patients: response.data, count: 2 });
-  };
+    setStartKeys(keys);
+  }, [data]);
 
   const handleDeletePatient = async () => {
     if (!patientId) return;
 
     await api.delete(`/patients/${patientId}`);
-    handleFetchPatients();
+    setPage(0);
+    setStartKeys([]);
   };
 
   return (
@@ -57,7 +52,7 @@ export function ListPatients() {
             Pacientes
           </Typography>
           <Stack direction="row" spacing={3}>
-            <Search />
+            <Search setSearch={setSearch} setPage={setPage} />
             <Button
               onClick={() => navigate(`create`)}
               variant="contained"
@@ -71,8 +66,8 @@ export function ListPatients() {
       <CustomPaginationTable
         page={page}
         setPage={setPage}
-        values={patientsData?.patients || []}
-        valuesCount={patientsData?.count || 0}
+        values={data?.patients || []}
+        valuesCount={data?.count || 0}
         handleEditRow={id => navigate(`${id}/edit`)}
         handleDeleteRow={id => {
           setConfirmDelete(true);

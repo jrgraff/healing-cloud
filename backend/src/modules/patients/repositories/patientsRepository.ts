@@ -7,14 +7,20 @@ interface IPatientsRepository {
   update(id: string, data: IPatient): Promise<IPatient>;
   findById(id: string): Promise<IPatient | undefined>;
   findByEmail(email: string): Promise<IPatient | undefined>;
-  findAll(page: number, search: string): Promise<[IPatient[], number]>;
+  findAll(
+    startKey: string,
+    search: string,
+    limit?: number,
+  ): Promise<{ count: number; patients: IPatient[] }>;
 }
 
 export class PatientsRepository implements IPatientsRepository {
+  tableName = 'hc-patients';
+
   async create(data: IPatient): Promise<IPatient> {
     await document
       .put({
-        TableName: 'hc-patients',
+        TableName: this.tableName,
         Item: {
           ...data,
           id: randomUUID(),
@@ -32,7 +38,7 @@ export class PatientsRepository implements IPatientsRepository {
     const itemKeys = Object.keys(items);
 
     let updateExpression = `SET ${itemKeys
-      .map((k, index) => `#field${index} = :value${index}`)
+      .map((__, index) => `#field${index} = :value${index}`)
       .join(', ')}`;
     let dataNames = itemKeys.reduce(
       (accumulator, k, index) => ({ ...accumulator, [`#field${index}`]: k }),
@@ -47,7 +53,7 @@ export class PatientsRepository implements IPatientsRepository {
     );
 
     const params = {
-      TableName: 'hc-patients',
+      TableName: this.tableName,
       Key: { id },
       UpdateExpression: updateExpression,
       ExpressionAttributeNames: dataNames,
@@ -58,39 +64,69 @@ export class PatientsRepository implements IPatientsRepository {
 
     const response = await this.findById(id);
 
-    return response;
+    return response as IPatient;
   }
-  async findById(id: string): Promise<IPatient> {
+  async findById(id: string) {
     const params = {
-      TableName: 'hc-patients',
+      TableName: this.tableName,
       Key: { id },
     };
 
     const response = await document.get(params).promise();
 
-    return response.Item;
+    return response.Item as IPatient;
   }
   async findByEmail(email: string): Promise<IPatient | undefined> {
     const params = {
-      TableName: 'hc-patients',
+      TableName: this.tableName,
       FilterExpression: 'email = :email',
       ExpressionAttributeValues: { ':email': email },
     };
 
     const response = await document.scan(params).promise();
 
-    return response?.Items?.length > 0 ? response.Items[0] : undefined;
+    return response?.Items?.length > 0
+      ? (response.Items[0] as IPatient)
+      : undefined;
   }
-  async findAll(page: number, search: string): Promise<any> {
+
+  async findAll(startKey: string, search: string, limit: number) {
+    const exclusiveStartKey = startKey
+      ? {
+          id: startKey,
+        }
+      : undefined;
+
     const params = {
-      TableName: 'hc-patients',
+      TableName: this.tableName,
       FilterExpression:
         'contains(full_name, :search) or contains(email, :search)',
       ExpressionAttributeValues: { ':search': search },
+      Limit: limit,
+      ExclusiveStartKey: exclusiveStartKey,
     };
 
     const response = await document.scan(params).promise();
 
-    return response.Items;
+    const count = await this.countPatients(search);
+
+    return { count, patients: response.Items } as {
+      count: number;
+      patients: IPatient[];
+    };
+  }
+
+  async countPatients(filter: string): Promise<number> {
+    const params = {
+      TableName: this.tableName,
+      Select: 'COUNT',
+      FilterExpression:
+        'contains(full_name, :search) or contains(email, :search)',
+      ExpressionAttributeValues: { ':search': filter },
+    };
+
+    const count = await document.scan(params).promise();
+
+    return count.Count;
   }
 }

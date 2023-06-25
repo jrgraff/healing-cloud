@@ -10,8 +10,9 @@ const getPatients: APIGatewayProxyHandler = async (event) => {
   const getPatientsService = new GetPatientsService();
 
   const patients = await getPatientsService.execute(
-    Number(params?.page || 0),
-    String(params?.search || ''),
+    params?.startKey,
+    params?.search || '',
+    Number(params?.limit) || 10,
   );
 
   return formatJSONResponse(patients, 200);

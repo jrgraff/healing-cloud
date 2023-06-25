@@ -3,6 +3,12 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { useState } from 'react';
+
+interface SearchProps {
+  setSearch: (value: string) => void;
+  setPage: (value: number) => void;
+}
 
 const SearchBar = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -42,16 +48,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function Search() {
+export function Search({ setSearch, setPage }: SearchProps) {
+  const [searchInput, setSearchInput] = useState('');
+
+  const handleSearch = () => {
+    setSearch(searchInput);
+    setPage(0);
+  };
+
   return (
     <Stack direction="row" spacing={1} justifyContent="space-between">
-      <SearchBar>
+      <SearchBar onChange={e => setSearchInput(e.target.value)}>
         <SearchIconWrapper>
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase placeholder="Buscar" />
       </SearchBar>
-      <Button variant="contained" color="secondary">
+      <Button onClick={handleSearch} variant="contained" color="secondary">
         Buscar
       </Button>
     </Stack>
