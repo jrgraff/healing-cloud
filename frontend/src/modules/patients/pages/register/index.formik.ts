@@ -6,7 +6,7 @@ export const registerPatientInitialValues = {
   birth_date: new Date(),
   cpf: '',
   address: {
-    number: null,
+    number: undefined,
     country: '',
     uf: '',
     city: '',
@@ -14,7 +14,7 @@ export const registerPatientInitialValues = {
     district: '',
     neighborhood: '',
     complement: '',
-    cep: null,
+    cep: undefined,
   },
 };
 
