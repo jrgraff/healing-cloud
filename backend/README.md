@@ -1,6 +1,6 @@
 ## Tecnologies
 
-This project was developed using cutting edge front-end technologies.
+This project was developed using cutting edge back-end technologies.
 
 - [Typescript](https://www.typescriptlang.org/)
 - [Serverless Framework](https://www.serverless.com/)
@@ -10,12 +10,12 @@ This project was developed using cutting edge front-end technologies.
 
 ### Requirements
 
-- You need to install both [Node.js](https://nodejs.org/en/download/) and [Serverless](https://www.serverless.com/) to run this project.
+- You need to install [Node.js](https://nodejs.org/en/download/), [Yarn](https://yarnpkg.com/) and [Serverless](https://www.serverless.com/) to run this project.
 
 **Clone the project and access the folder**
 
 ```bash
-$ git clone https://github.com/jrgraff/healing-cloud.git && cd healing-cloud
+$ git clone https://github.com/jrgraff/healing-cloud.git && cd healing-cloud/backend
 ```
 
 **Follow the steps below to start on dev**
