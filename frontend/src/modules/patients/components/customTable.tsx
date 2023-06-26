@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { format, parseISO } from 'date-fns';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -118,7 +119,9 @@ export function CustomPaginationTable({
                 {row.full_name}
               </TableCell>
               <TableCell align="right">{row.email}</TableCell>
-              <TableCell align="right">{row.birth_date}</TableCell>
+              <TableCell align="right">
+                {format(parseISO(row.birth_date), 'dd/MM/yyyy')}
+              </TableCell>
               <TableCell align="right">
                 <IconButton
                   onClick={() => handleEditRow(row.id)}
