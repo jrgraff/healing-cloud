@@ -9,7 +9,7 @@
 ## Links
 
 - Backend hosted on AWS Serverless: (https://9hj1g0tt72.execute-api.us-east-1.amazonaws.com/dev/patients)
-- Frontend hosted on Render:
+- Frontend hosted on Vercel: (https://healing-cloud.vercel.app/)
 
 ## Required
 
