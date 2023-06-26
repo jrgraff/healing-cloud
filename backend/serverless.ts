@@ -2,7 +2,7 @@ import type { AWS } from '@serverless/typescript';
 import { patients } from './src/modules/patients';
 
 const PATIENTS_TABLE_NAME = 'hc-patients';
-const REGION = 'sa-east-1';
+const REGION = 'us-east-1';
 
 const serverlessConfiguration: AWS = {
   service: 'healingcloud-serverless',

@@ -15,6 +15,7 @@ const createPatient = {
             'application/json': patientSchema,
           },
         },
+        cors: true,
       },
     },
   ],
@@ -32,6 +33,7 @@ const updatePatient = {
             'application/json': patientSchema,
           },
         },
+        cors: true,
       },
     },
   ],
@@ -44,6 +46,7 @@ const getPatientById = {
       http: {
         method: 'get',
         path: 'patients/{id}',
+        cors: true,
       },
     },
   ],
@@ -56,6 +59,7 @@ const deletePatient = {
       http: {
         method: 'delete',
         path: 'patients/{id}',
+        cors: true,
       },
     },
   ],
@@ -68,6 +72,7 @@ const getPatients = {
       http: {
         method: 'get',
         path: 'patients',
+        cors: true,
       },
     },
   ],

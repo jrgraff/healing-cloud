@@ -2,6 +2,15 @@
 
 - To develop a web application (CRUD) to manage patient registers (Patient's name, birth date, email and address) using a cloud database and serverless architecture.
 
+## How to run
+
+- Each folder contains a readme file with the necessary instructions for installing each module.
+
+## Links
+
+- Backend hosted on AWS Serverless: (https://9hj1g0tt72.execute-api.us-east-1.amazonaws.com/dev/patients)
+- Frontend hosted on Render:
+
 ## Required
 
 - You need to develop both the front-end using React Typescript and the back-end using Node.js.
